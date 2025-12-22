@@ -1,16 +1,18 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from app.routes import router
 from .database import SessionLocal
 from .models import Product
 from .schemas import ProductIn
 from .scoring import (
-    compute_demand_score,
-    compute_competition_score,
-    compute_risk_score,
-    compute_viability_score
+    calculate_demand,
+    calculate_competition,
+    calculate_risk,
+    calculate_viability
 )
 
 app = FastAPI(title="AI Dropshipping Agent")
+app.include_router(router)
 
 def get_db():
     db = SessionLocal()
@@ -21,10 +23,10 @@ def get_db():
 
 @app.post("/products")
 def ingest_product(product: ProductIn, db: Session = Depends(get_db)):
-    demand = compute_demand_score(product.review_count)
-    competition = compute_competition_score(product.review_count)
-    risk = compute_risk_score(product.shipping_time_days)
-    viability = compute_viability_score(demand, competition, risk)
+    demand = calculate_demand(product.review_count)
+    competition = calculate_competition(product.review_count)
+    risk = calculate_risk(product.shipping_time_days)
+    viability = calculate_viability(demand, competition, risk)
 
     db_product = Product(
         **product.dict(),

@@ -1,14 +1,14 @@
 from pydantic import BaseModel
+from typing import List
+
 
 class ProductIn(BaseModel):
-    title: str
-    source: str
-    category: str
+    name: str
+    cost: float
+    sale_price: float
+    shipping_days: int
+    competition_level: float
 
-    cost_price: float
-    shipping_cost: float
-    shipping_time_days: int
 
-    selling_price: float
-    rating: float | None = None
-    review_count: int | None = None
+class ProductBatch(BaseModel):
+    products: List[ProductIn]
