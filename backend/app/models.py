@@ -25,3 +25,11 @@ class Product(Base):
 
     ai_summary = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class APIKey(Base):
+    __tablename__ = "api_keys"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String, unique=True, index=True, nullable=False)
+    owner = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
