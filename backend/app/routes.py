@@ -17,3 +17,7 @@ def analyze_products(
         "count": len(results),
         "results": results
     }
+
+@router.get("/health", dependencies=[Depends(verify_api_key)])
+def health_check():
+    return {"status": "ok"}

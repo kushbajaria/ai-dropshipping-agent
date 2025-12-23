@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from app.routes import router
 from .database import SessionLocal
+from .database import engine
+from .models import Base
 from .models import Product
 from .schemas import ProductIn
 from .scoring import (
@@ -10,6 +12,8 @@ from .scoring import (
     calculate_risk,
     calculate_viability
 )
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Dropshipping Agent")
 app.include_router(router)

@@ -1,14 +1,31 @@
-from fastapi import Header, HTTPException, Depends
-from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models import APIKey
+from fastapi import Depends, HTTPException, Security, Request
+from fastapi.security import APIKeyHeader
+import os
+
+# Define where the API key comes from
+api_key_header = APIKeyHeader(
+    name="X-API-Key",
+    auto_error=False
+)
+
+# Load expected API key from environment
+API_KEY = os.getenv("API_KEY")
 
 
-def verify_api_key(
-    x_api_key: str = Header(...),
-    db: Session = Depends(get_db)
+async def verify_api_key(
+    request: Request,
+    api_key: str = Security(api_key_header)
 ):
-    key = db.query(APIKey).filter(APIKey.key == x_api_key).first()
-    if not key:
-        raise HTTPException(status_code=401, detail="Invalid API key")
-    return key
+    if API_KEY is None:
+        raise HTTPException(
+            status_code=500,
+            detail="API key not configured on server"
+        )
+
+    if api_key != API_KEY:
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid or missing API key"
+        )
+
+    return True

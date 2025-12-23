@@ -33,3 +33,11 @@ class APIKey(Base):
     key = Column(String, unique=True, index=True, nullable=False)
     owner = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class ApiUsage(Base):
+    __tablename__ = "api_usage"
+
+    id = Column(Integer, primary_key=True, index=True)
+    api_key = Column(String, index=True, nullable=False)
+    endpoint = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
