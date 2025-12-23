@@ -1,13 +1,28 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
+import os
 
-DATABASE_URL = "postgresql://kush@localhost:5432/dropship_ai"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite:///./app.db"  # default fallback for local dev
+)
+
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,
+    future=True
+)
+
+SessionLocal = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    autocommit=False
+)
 
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+class Base(DeclarativeBase):
+    pass
 
-Base = declarative_base()
 
 def get_db():
     db = SessionLocal()

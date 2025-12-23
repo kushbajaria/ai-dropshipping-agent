@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from app.routes import router
 from .database import SessionLocal
 from .database import engine
-from .models import Base
+from app.database import Base
 from .models import Product
 from .schemas import ProductIn
 from .scoring import (
@@ -13,9 +13,10 @@ from .scoring import (
     calculate_viability
 )
 
+app = FastAPI(title="AI Dropshipping Agent")
+
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="AI Dropshipping Agent")
 app.include_router(router)
 
 def get_db():
