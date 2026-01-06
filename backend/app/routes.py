@@ -18,7 +18,7 @@ def analyze_products(
 ):
     results = ingest_products([p.dict() for p in batch.products])
     return {
-        "owner": api_key.owner,
+        "owner": api_key["key"],
         "count": len(results),
         "results": results
     }

@@ -14,8 +14,8 @@ def ingest_products(raw_products: list[dict]) -> list[dict]:
             name=raw["name"],
             cost=raw["cost"],
             sale_price=raw["sale_price"],
-            shipping_days=raw["shipping_days"],
-            competition_level=raw["competition_level"]
+            shipping_days=raw.get("shipping_days", 0),
+            competition_level=raw.get("competition_level", 0.0)
         )
 
         # Map competition_level (0–1) to review count
