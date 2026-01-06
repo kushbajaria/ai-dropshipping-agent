@@ -5,13 +5,16 @@ from .database import SessionLocal
 from .database import engine
 from app.database import Base
 from .models import Product
-from .schemas import ProductIn
+from .schema import ProductIn
 from .scoring import (
     calculate_demand,
     calculate_competition,
     calculate_risk,
     calculate_viability
 )
+
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI(title="AI Dropshipping Agent")
 

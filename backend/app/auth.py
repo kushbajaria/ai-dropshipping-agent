@@ -1,6 +1,10 @@
 from fastapi import Depends, HTTPException, Security, Request
 from fastapi.security import APIKeyHeader
+from dotenv import load_dotenv
 import os
+
+# Load environment variables BEFORE reading them
+load_dotenv()
 
 # Define where the API key comes from
 api_key_header = APIKeyHeader(

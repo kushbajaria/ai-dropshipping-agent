@@ -1,14 +1,10 @@
+# app/schemas.py
+
 from pydantic import BaseModel
-from typing import List
 
-
-class ProductIn(BaseModel):
+class ProductCreate(BaseModel):
     name: str
+    supplier: str
     cost: float
     sale_price: float
-    shipping_days: int
-    competition_level: float
-
-
-class ProductBatch(BaseModel):
-    products: List[ProductIn]
+    niche: str

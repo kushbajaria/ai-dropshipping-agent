@@ -1,9 +1,14 @@
 from fastapi import APIRouter, Depends
-from app.schemas import ProductBatch
+from sqlalchemy.orm import Session
+
+from app.schema import ProductBatch
 from app.ingestion import ingest_products
 from app.auth import verify_api_key
+from app.database import get_db
+from app.schemas import ProductCreate, ProductRead
+from app.models import Product
 
-router = APIRouter()
+router = APIRouter(prefix="/products", tags=["Products"])
 
 
 @router.post("/analyze-products")
@@ -18,6 +23,31 @@ def analyze_products(
         "results": results
     }
 
+
 @router.get("/health", dependencies=[Depends(verify_api_key)])
 def health_check():
     return {"status": "ok"}
+
+
+@router.post(
+    "/",
+    response_model=list[ProductRead],
+    dependencies=[Depends(verify_api_key)]
+)
+def create_products(
+    products: list[ProductCreate],
+    db: Session = Depends(get_db)
+):
+    db_products = []
+
+    for product in products:
+        db_product = Product(**product.dict())
+        db.add(db_product)
+        db_products.append(db_product)
+
+    db.commit()
+
+    for p in db_products:
+        db.refresh(p)
+
+    return db_products
