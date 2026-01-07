@@ -10,6 +10,7 @@ from app.database import get_db
 from app.schemas import ProductCreate, ProductRead
 from app.models import Product
 from app.scoring_v2 import analyze_product_complete
+from app.product_fetcher import fetch_product_auto
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
@@ -59,6 +60,51 @@ def analyze_product(
         
         return {
             "success": True,
+            "analysis": analysis,
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/search")
+def search_product(
+    product_name: str,
+    api_key=Depends(verify_api_key)
+):
+    """
+    🔍 AUTO-FETCH PRODUCT DATA
+    
+    Enter just a product name and we automatically fetch:
+    - Supplier cost (from AliExpress)
+    - Average selling prices (from Amazon)
+    - Competition level (seller count, reviews)
+    - Shipping information
+    - Market demand trend
+    
+    Returns pre-filled analysis ready to evaluate.
+    """
+    try:
+        # Fetch all product data automatically
+        product_data = fetch_product_auto(product_name)
+        
+        # Immediately analyze it
+        analysis = analyze_product_complete(
+            selling_price=product_data["selling_price"],
+            product_cost=product_data["product_cost"],
+            shipping_from_supplier=product_data["shipping_from_supplier"],
+            shipping_to_customer=product_data["shipping_to_customer"],
+            shipping_days=product_data["shipping_days"],
+            seller_count=product_data["seller_count"],
+            review_count=product_data["review_count"],
+            platform=product_data["platform"],
+            ad_cost_percent=product_data["ad_cost_percent"],
+        )
+        
+        return {
+            "success": True,
+            "product_name": product_name,
+            "fetched_data": product_data,
             "analysis": analysis,
         }
     
