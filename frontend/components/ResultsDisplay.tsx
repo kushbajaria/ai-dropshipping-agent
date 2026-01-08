@@ -14,40 +14,56 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result }) => {
   const { profit_analysis, success_analysis, market_intelligence, summary } = analysis
 
   return (
-    <div className="space-y-8">
-      {/* Recommendation */}
-      <div>
+    <div className="space-y-6">
+      {/* Top Recommendation Card */}
+      <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-8 border-2 border-emerald-200">
         <RecommendationBadge
           recommendation={success_analysis.recommendation}
           probability={success_analysis.success_probability}
         />
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="card text-center">
-          <p className="text-gray-600 text-sm mb-2">Net Profit Per Sale</p>
-          <p className="text-3xl font-bold text-green-600">{summary.net_profit_per_sale}</p>
+      {/* Key Metrics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Net Profit */}
+        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <p className="text-slate-600 text-xs font-semibold uppercase mb-2">Net Profit Per Sale</p>
+          <p className="text-4xl font-bold text-emerald-600">{summary.net_profit_per_sale}</p>
+          <p className="text-xs text-slate-500 mt-2">After ALL costs</p>
         </div>
-        <div className="card text-center">
-          <p className="text-gray-600 text-sm mb-2">Net Margin</p>
-          <p className="text-3xl font-bold text-blue-600">{summary.margin}</p>
+
+        {/* Net Margin */}
+        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <p className="text-slate-600 text-xs font-semibold uppercase mb-2">Net Margin %</p>
+          <p className="text-4xl font-bold text-blue-600">{summary.margin}</p>
+          <p className="text-xs text-slate-500 mt-2">True profitability</p>
         </div>
-        <div className="card text-center">
-          <p className="text-gray-600 text-sm mb-2">Competition</p>
-          <p className="text-2xl font-bold text-purple-600">{market_intelligence.competition_level}</p>
-          <p className="text-xs text-gray-500">{market_intelligence.seller_count} sellers</p>
+
+        {/* Competition */}
+        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <p className="text-slate-600 text-xs font-semibold uppercase mb-2">Competition</p>
+          <p className="text-3xl font-bold text-slate-800">{market_intelligence.seller_count}</p>
+          <p className="text-xs text-slate-500 mt-2">{market_intelligence.competition_level} sellers</p>
         </div>
-        <div className="card text-center">
-          <p className="text-gray-600 text-sm mb-2">Demand Trend</p>
-          <p className="text-2xl font-bold text-orange-600">{market_intelligence.demand_trend}</p>
+
+        {/* Demand Trend */}
+        <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+          <p className="text-slate-600 text-xs font-semibold uppercase mb-2">Trend</p>
+          <p className={`text-3xl font-bold ${
+            market_intelligence.demand_trend === 'RISING' ? 'text-emerald-600' :
+            market_intelligence.demand_trend === 'FALLING' ? 'text-red-600' :
+            'text-slate-600'
+          }`}>
+            {market_intelligence.demand_trend === 'RISING' ? '📈' : market_intelligence.demand_trend === 'FALLING' ? '📉' : '→'} {market_intelligence.demand_trend}
+          </p>
         </div>
       </div>
 
-      {/* Profit Breakdown */}
-      <div className="card">
-        <h3 className="text-2xl font-bold mb-6">💰 Profit Breakdown</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Detailed Breakdown */}
+      <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+        <h3 className="text-2xl font-bold text-slate-900 mb-8">💰 Cost Breakdown</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+
           <div>
             <ProfitBreakdownChart
               selling_price={profit_analysis.selling_price}

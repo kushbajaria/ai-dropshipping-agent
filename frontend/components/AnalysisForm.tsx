@@ -33,21 +33,20 @@ export const AnalysisForm: React.FC<AnalysisFormProps> = ({ onSubmit, loading = 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-xl p-8">
-      <h2 className="text-3xl font-bold mb-8 gradient-text">Analyze Product</h2>
-
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Pricing Section */}
-      <div className="mb-8">
-        <h3 className="text-xl font-semibold text-gray-800 mb-4">💰 Pricing</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <label className="block text-sm font-semibold text-slate-900 mb-3">💰 Product Pricing</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="label-text">Selling Price ($)</label>
+            <label className="block text-xs text-slate-600 font-medium mb-1">Selling Price ($)</label>
             <input
               type="number"
               name="selling_price"
               step="0.01"
               value={formData.selling_price}
               onChange={handleChange}
+              className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
               className="input-field"
               placeholder="39.99"
               required

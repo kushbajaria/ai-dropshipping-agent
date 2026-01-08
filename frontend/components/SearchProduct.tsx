@@ -54,43 +54,45 @@ export default function SearchProduct({ onResults }: SearchProductProps) {
   }
 
   return (
-    <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-xl p-8">
-      <h2 className="text-3xl font-bold mb-8 gradient-text">🔍 Quick Search</h2>
-      
-      <div className="mb-6">
-        <label className="label-text">Product Name</label>
+    <form onSubmit={handleSearch} className="space-y-4">
+      <div>
+        <label className="block text-sm font-semibold text-slate-900 mb-2">Product Name</label>
         <input
           type="text"
           value={productName}
           onChange={(e) => setProductName(e.target.value)}
-          placeholder="e.g., phone case, pet camera, wireless earbuds..."
-          className="input-field"
+          placeholder="e.g., phone case, gaming mouse, bluetooth speaker..."
+          className="w-full px-4 py-3 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white text-slate-900 placeholder-slate-400"
           disabled={loading}
         />
-        <p className="text-sm text-gray-500 mt-2">
-          💡 Just enter the product name and we'll fetch all data automatically
+        <p className="text-xs text-slate-600 mt-2">
+          💡 We'll fetch live prices from Amazon & AliExpress automatically
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-700">{error}</p>
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm"><span className="font-semibold">Error:</span> {error}</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={loading || !productName.trim()}
-        className={`w-full btn-primary ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`w-full py-3 px-4 rounded-lg font-semibold transition ${
+          loading || !productName.trim()
+            ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+            : 'bg-emerald-600 text-white hover:bg-emerald-700'
+        }`}
       >
-        {loading ? '🔍 Searching...' : '🚀 Search & Analyze'}
+        {loading ? '⏳ Searching...' : '🔍 Search & Analyze'}
       </button>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-        <p className="text-sm text-gray-700 font-semibold mb-2">
-          What we fetch:
+      <div className="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+        <p className="text-sm font-semibold text-slate-800 mb-2">
+          🌐 What we fetch:
         </p>
-        <ul className="text-sm text-gray-700 list-disc list-inside">
+        <ul className="text-sm text-slate-700 list-disc list-inside space-y-1">
           <li>💰 Supplier cost (from AliExpress)</li>
           <li>💸 Market prices (from Amazon)</li>
           <li>👥 Competition level (seller counts)</li>

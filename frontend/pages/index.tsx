@@ -29,122 +29,192 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-500 to-purple-700 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
       <Head>
-        <title>Dropshipping Product Analyzer</title>
-        <meta name="description" content="Find winning products with TRUE profit calculations" />
+        <title>Dropshipping Profit Analyzer | Real Data, Real Profits</title>
+        <meta name="description" content="Discover TRUE profit margins after ALL costs. Join dropshippers making data-driven decisions." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4">🎯 Product Analyzer</h1>
-          <p className="text-xl text-purple-100 mb-2">
-            Discover TRUE profit margins after ALL costs
+      {/* Navigation Bar */}
+      <nav className="border-b border-slate-200 bg-white sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+            <h2 className="text-xl font-bold text-slate-800">Profit Analyzer</h2>
+          </div>
+          <p className="text-sm text-slate-600 hidden sm:block">Real data. Real profit calculations. No BS.</p>
+        </div>
+      </nav>
+
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-slate-900 mb-4">
+            Know Your True Profit Before You Start
+          </h1>
+          <p className="text-xl text-slate-600 mb-6 max-w-3xl mx-auto">
+            Most tools show fake margins. We show <span className="font-semibold text-emerald-600">ALL costs</span> — platform fees, payment processing, shipping, ads, returns. 
+            Make confident decisions with real numbers.
           </p>
-          <p className="text-purple-200">
-            Analyze products in seconds, not hours. Find winners before you spend money.
-          </p>
+          
+          {/* Trust Badges */}
+          <div className="flex justify-center gap-8 mb-12 flex-wrap">
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="text-lg">✓</span> <span className="text-sm">Live Market Data</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="text-lg">✓</span> <span className="text-sm">8 Cost Factors</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="text-lg">✓</span> <span className="text-sm">Industry Rates</span>
+            </div>
+            <div className="flex items-center gap-2 text-slate-700">
+              <span className="text-lg">✓</span> <span className="text-sm">Honest Results</span>
+            </div>
+          </div>
         </div>
 
-        {/* Mobile Tabs */}
-        <div className="flex gap-4 mb-8 lg:hidden">
+        {/* Tabs */}
+        <div className="flex gap-4 mb-8 border-b border-slate-200">
           <button
             onClick={() => setActiveTab('search')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
+            className={`px-6 py-3 font-semibold transition border-b-2 ${
               activeTab === 'search'
-                ? 'bg-white text-purple-600'
-                : 'bg-white/20 text-white hover:bg-white/30'
+                ? 'text-emerald-600 border-emerald-600'
+                : 'text-slate-600 border-transparent hover:text-slate-900'
             }`}
           >
             🔍 Quick Search
           </button>
           <button
             onClick={() => setActiveTab('manual')}
-            className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
+            className={`px-6 py-3 font-semibold transition border-b-2 ${
               activeTab === 'manual'
-                ? 'bg-white text-purple-600'
-                : 'bg-white/20 text-white hover:bg-white/30'
+                ? 'text-emerald-600 border-emerald-600'
+                : 'text-slate-600 border-transparent hover:text-slate-900'
             }`}
           >
-            ✏️ Manual Entry
+            📝 Manual Entry
           </button>
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form Column */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Left Column - Input Form */}
           <div className="lg:col-span-1">
-            {/* Desktop: show search by default */}
-            <div className="hidden lg:block">
-              <SearchProduct onResults={setResult} />
+            <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition">
+              <div className="mb-6">
+                <h2 className="text-lg font-bold text-slate-900 mb-1">
+                  {activeTab === 'search' ? '🔍 Search Product' : '📝 Enter Details'}
+                </h2>
+                <p className="text-sm text-slate-600">
+                  {activeTab === 'search' 
+                    ? 'Type any product name. We\'ll fetch live data.' 
+                    : 'Enter your product details manually.'}
+                </p>
+              </div>
+
+              {activeTab === 'search' ? (
+                <SearchProduct 
+                  onResults={setResult}
+                  isLoading={loading}
+                />
+              ) : (
+                <AnalysisForm 
+                  onSubmit={handleAnalyze}
+                  isLoading={loading}
+                />
+              )}
+
+              {error && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 text-sm"><span className="font-semibold">Error:</span> {error}</p>
+                </div>
+              )}
             </div>
 
-            {/* Mobile: show active tab */}
-            {activeTab === 'search' && (
-              <div className="lg:hidden">
-                <SearchProduct onResults={setResult} />
-              </div>
-            )}
-
-            {activeTab === 'manual' && (
-              <AnalysisForm onSubmit={handleAnalyze} loading={loading} />
-            )}
+            {/* Info Card */}
+            <div className="mt-6 bg-blue-50 rounded-2xl p-6 border border-blue-200">
+              <h3 className="font-semibold text-blue-900 mb-3">💡 What We Calculate</h3>
+              <ul className="space-y-2 text-sm text-blue-800">
+                <li>✓ Product cost from suppliers</li>
+                <li>✓ Shipping (supplier → you → customer)</li>
+                <li>✓ Platform fees (Shopify, Amazon, etc)</li>
+                <li>✓ Payment processing fees</li>
+                <li>✓ Advertising costs (20% default)</li>
+                <li>✓ Return/refund reserves</li>
+                <li>✓ Packaging materials</li>
+                <li>✓ <strong>TRUE net profit</strong></li>
+              </ul>
+            </div>
           </div>
 
-          {/* Results Column */}
+          {/* Right Column - Results */}
           <div className="lg:col-span-2">
-            {error && (
-              <div className="bg-red-100 border-2 border-red-300 rounded-lg p-6 mb-6">
-                <h3 className="text-red-800 font-bold mb-2">❌ Error</h3>
-                <p className="text-red-700">{error}</p>
-                <p className="text-red-600 text-sm mt-2">
-                  💡 Tip: Make sure the backend server is running at{' '}
-                  <code className="bg-red-50 px-2 py-1 rounded">
-                    {process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}
-                  </code>
-                </p>
-              </div>
-            )}
-
-            {result && !loading && (
-              <div className="space-y-6">
-                <ResultsDisplay result={result} />
-              </div>
-            )}
-
-            {!result && !error && !loading && (
-              <div className="bg-white rounded-lg shadow-xl p-12 text-center">
-                <p className="text-6xl mb-4">📊</p>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">Enter product details to get started</h3>
-                <p className="text-gray-600">
-                  Use the quick search to auto-fetch product data, or enter details manually
-                </p>
-              </div>
-            )}
-
-            {loading && (
-              <div className="bg-white rounded-lg shadow-xl p-12 text-center">
-                <div className="inline-block">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mb-4"></div>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">Analyzing...</h3>
-                <p className="text-gray-600">
-                  Calculating TRUE profit, success probability, and market intelligence...
+            {result ? (
+              <ResultsDisplay result={result} />
+            ) : (
+              <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-12 border-2 border-dashed border-slate-300 text-center">
+                <div className="text-6xl mb-4">📈</div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">Enter a product to get started</h3>
+                <p className="text-slate-600 max-w-md mx-auto">
+                  Search for any product name or enter details manually. We'll instantly show you the true profit potential.
                 </p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-16 text-center text-purple-100">
-          <p className="text-sm">
-            🚀 Accurate. Fast. Profitable. | Stop guessing. Start analyzing.
-          </p>
+        {/* Features Section */}
+        <div className="mt-20 pt-12 border-t border-slate-200">
+          <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Why Choose Us?</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl p-8 border border-slate-200">
+              <div className="text-4xl mb-4">🎯</div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Real Data</h3>
+              <p className="text-slate-600 text-sm">
+                Live scraping from Amazon & AliExpress. Fresh prices, real competition data, actual trends.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-8 border border-slate-200">
+              <div className="text-4xl mb-4">💰</div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">ALL Costs Included</h3>
+              <p className="text-slate-600 text-sm">
+                Unlike fake tools showing 40% margins, we show TRUE profit after every expense. Industry-standard rates.
+              </p>
+            </div>
+            <div className="bg-white rounded-xl p-8 border border-slate-200">
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">Instant Insights</h3>
+              <p className="text-slate-600 text-sm">
+                Analyze 100s of products in minutes. Get success scores, profitability ratings, and honest recommendations.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="mt-20 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-12 border border-emerald-200 text-center">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Ready to Make Better Decisions?</h2>
+          <p className="text-slate-700 mb-6">Join dropshippers using real profit analysis to build sustainable businesses.</p>
+          <button 
+            onClick={() => setActiveTab('search')}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-8 rounded-lg transition shadow-md"
+          >
+            Search Your First Product →
+          </button>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-200 mt-20 py-8 bg-white">
+        <div className="max-w-6xl mx-auto px-4 text-center text-slate-600 text-sm">
+          <p>We show TRUE profit. No fluff. No fake margins. Just honest analysis.</p>
+          <p className="mt-2 text-slate-500">Built for dropshippers who want to win the right way.</p>
+        </div>
+      </footer>
     </div>
   )
 }
+
